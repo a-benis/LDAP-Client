@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+    openldap:
+        image: osixia/openldap:1.5.0
+        container_name: openldap
+        restart: unless-stopped
+        environment:
+            LDAP_ORGANISATION: Irembo LTD
+            LDAP_DOMAIN: irembo.rw
+            LDAP_BASE_DN: dc=irembo,dc=rw
+            LDAP_ADMIN_PASSWORD: secret
+            LDAP_REMOVE_CONFIG_AFTER_SETUP: "false"
+        command: [--copy-service, --loglevel, debug]
+        volumes:
+            - ./Data/ldifs:/container/service/slapd/assets/config/bootstrap/ldif/custom
+            - ./Data/openldap_data/data:/var/lib/ldap
+            - ./Data/openldap_data/config:/etc/ldap/slapd.d
+        ports:
+            - 636:636
+            - 389:389
+            - 1636:1636
